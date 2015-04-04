@@ -240,8 +240,10 @@ no obvious bias is visible.
 \newpage
 
 ```{r include=FALSE}
-sample.sizes=c(60, 120, 240)
+sample.sizes=c(60, 120, 180)
 sample.captions=mapply(paste, sample.sizes, "boxes")
+sample.size.string=as.character(sample.sizes)
+sample.size.string[length(sample.size.string)] = paste("and", sample.size.string[length(sample.size.string)])
 
 opts_chunk$set(fig.width = 4/2);
 opts_chunk$set(fig.height = 2.5/2); 
@@ -254,7 +256,8 @@ We investigate the power of the corrected ANOVA to detect
 a situation where the null hypothesis is, in fact, false.
 
 As this is a power study, we these experiments use a smaller
-sample size; instead of 900 boxes, we try `r sample.sizes`.
+sample size; instead of `r n.boxes` boxes, we try smaller samples:
+`r sample.size.string`.
 
 ```{r simulation4, fig.cap="Empiricial Distribution of p-values under unequal proportions", fig.subcap=sample.captions }
 
@@ -291,4 +294,5 @@ for (n.boxes in sample.sizes) {
   }
 ```
 
-Can we see the difference?
+As reasonable sample sizes (about 30 _per color_), this test appears to
+reliably detect that the proportion of one color is different.
