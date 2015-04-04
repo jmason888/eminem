@@ -1,5 +1,5 @@
 ---
-title: "M&M's\\textregistered simulation"
+title: "M&M's\\textregistered {} simulation"
 author: "James Mason"
 date: "Friday, April 03, 2015"
 output:
@@ -50,8 +50,8 @@ opts_chunk$set( fig.align='center');
 
 This R Markdown code explores the issues with a misspecified ANOVA model
 for investigating the homogeneity of the distribution of colors within
-packages of m&m's\textregistered
-candies\footnote{``m&m's'' is a trademark of Mars Chocolate North America, LLC}.
+packages of m&m's\textregistered {}
+candies\footnote{``m\&m's'' is a trademark of Mars Chocolate North America, LLC}.
 
 ```{r}
 colors=factor(c('red', 'yellow', 'orange', 'green', 'brown', 'blue'))
@@ -259,7 +259,7 @@ As this is a power study, we these experiments use a smaller
 sample size; instead of `r n.boxes` boxes, we try smaller samples:
 `r sample.size.string`.
 
-```{r simulation4, fig.cap="Empiricial Distribution of p-values under unequal proportions", fig.subcap=sample.captions }
+```{r simulation4, fig.cap="Empiricial Distributions of p-values under unequal proportions", fig.subcap=sample.captions }
 
 for (n.boxes in sample.sizes) {
   p.values = times (n.replications) %do% {
@@ -294,5 +294,5 @@ for (n.boxes in sample.sizes) {
   }
 ```
 
-As reasonable sample sizes (about 30 _per color_), this test appears to
+At reasonable sample sizes (about 30 _per color_), this test appears to
 reliably detect that the proportion of one color is different.
