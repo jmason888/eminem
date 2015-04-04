@@ -51,12 +51,14 @@ for investigating the homogeneity of the distribution of colors within
 packages of M&M candies.
 
 ```{r}
-library(foreach)
 colors=factor(c('red', 'yellow', 'orange', 'green', 'brown', 'blue'))
 n.candies=20            # Number of M&Ms per box
 n.boxes=990             # Number of boxes sampled in each experiment, 
                         # should be a multiple of the number of colors
-n.replications=10000    # Number of experiments
+n.replications=50000    # Number of experiments
+
+library(foreach)
+set.seed(1337)          # For replicability; remove this line for a random seed
 ```
 
 The data-generating model is that boxes of M&Ms are assumed to be filled
