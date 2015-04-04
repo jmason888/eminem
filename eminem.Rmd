@@ -111,9 +111,8 @@ sample from the standard normal distribution $N(0,1)$.
 ```{r simulation1, fig.cap="Empiricial Distribution of p-values under simple ANOVA"  }
 p.values = times (n.replications) %do% {
   # For each color, draw N standard normal deviates
-  counts=data.frame(foreach(color=colors, .combine=rbind) %do%
-                      data.frame(color=color,
-                                 count=rnorm(n.boxes)))
+  counts=data.frame(color=rep(colors, each=n.boxes),
+                    count=rnorm(n.boxes*length(colors)))
   
   # To run ANOVA in R, we first fit ANOVA as a linear model using lm(),
   # then use the anova() function to compute the required F-tests.
@@ -146,8 +145,7 @@ p.values = times (n.replications) %do% {
   # Draw a sample from a vat with equal proportions of each color
   sample=t(replicate(n.boxes, sample(colors, n.candies, replace=TRUE)))
   
-  # Form a dataset where we count each color in each box and combine these
-  # counts into a single dataset.
+  # We count each color in each box and combine these counts into a single dataset.
   counts=data.frame(foreach(color=colors, .combine=rbind) %do%
                       data.frame(color=color,
                                  count=apply(sample, 1, function(row) sum(row == color))))
