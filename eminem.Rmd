@@ -141,8 +141,10 @@ hist(p.values, xlim=c(0, 1),
 # Overlay a kernel density plot
 lines(density(p.values))
 
-# Overlay the density=1.0 criterion line
+# Overlay a criterion line for density=1.0
+# a significance line at the traditional figure of p=0.05
 abline(h=1.0, lty=4)
+abline(v=0.05, lty=4)
 ```
 
 With a large number of replications,
@@ -176,13 +178,14 @@ p.values = times (n.replications) %do% {
   p.value
 }
 
-# Histogram of the p-values, density plot, and criterion line
+# Histogram of the p-values, density plot, and criterion lines
 par(mar=c(4, 4, 0.5, 2)) # (bottom, left, top, right)
 hist(p.values, xlim=c(0, 1),
      breaks=min(20, n.replications/10),
      main=NA, freq=FALSE)
 lines(density(p.values))
 abline(h=1.0, lty=4)
+abline(v=0.05, lty=4)
 ```
 
 Even with a large number of replications,
@@ -226,13 +229,14 @@ p.values = times (n.replications) %do% {
   p.value
 }
 
-# Histogram of the p-values, density plot, and criterion line
+# Histogram of the p-values, density plot, and criterion lines
 par(mar=c(4, 4, 0.5, 2)) # (bottom, left, top, right)
 hist(p.values, xlim=c(0, 1),
      breaks=min(20, n.replications/10),
      main=NA, freq=FALSE)
 lines(density(p.values))
 abline(h=1.0, lty=4)
+abline(v=0.05, lty=4)
 ```
 
 With a large number of replications,
@@ -284,13 +288,14 @@ for (n.boxes in sample.sizes) {
     p.value
     }
   
-  # Histogram of the p-values, density plot, and criterion line
+  # Histogram of the p-values, density plot, and criterion lines
   par(mar=c(2, 2, 0.5, 0.5), cex=0.5) # (bottom, left, top, right)
   hist(p.values, xlim=c(0, 1),
        breaks=min(20, n.replications/10),
        xlab=NA, ylab=NA, main=NA, freq=FALSE)
   lines(density(p.values))
   abline(h=1.0, lty=4)
+  abline(v=0.05, lty=4)
   }
 ```
 
