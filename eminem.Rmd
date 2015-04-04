@@ -1,0 +1,26 @@
+---
+title: "M&Ms simulation"
+author: "James Mason"
+date: "Friday, April 03, 2015"
+output: html_document
+---
+
+```{r}
+library(foreach)
+n.boxes=1000
+n.replications=1000
+
+colors=factor(c('red', 'green', 'blue', 'yellow'))
+
+p.values = times (n.replications) %do% {
+  sample=t(replicate(n.boxes, sample(colors, 20, replace=TRUE)))
+  counts=data.frame(foreach(color=colors, .combine=rbind) %do% data.frame(color=color, count=apply(sample, 1, function(row) sum(row == color))))
+  lm=lm(count~color, data=counts)
+  a=anova(lm)
+  p.value=a['color','Pr(>F)']
+  p.value
+}
+
+hist(p.values)
+```
+
