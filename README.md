@@ -24,6 +24,7 @@ room for each of the other colors.
 
 For the statistical test implied by
 the ANOVA model, hypothesis test is as follows:
+
 * H<sub>0</sub>: The colors in the vat are in equal proportion.
 * H<sub>A</sub>: At least one color in the vat has a different
 proportion than the others.
