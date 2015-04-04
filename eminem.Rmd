@@ -1,5 +1,5 @@
 ---
-title: "M&Ms simulation"
+title: "M&M's\\textregistered simulation"
 author: "James Mason"
 date: "Friday, April 03, 2015"
 output:
@@ -27,6 +27,8 @@ header-includes:
    - \usetikzlibrary{positioning}
    - \usepackage[absolute]{textpos}
    - \usepackage{sidecap}
+   - \usepackage{subfig}
+   - \usepackage{textcomp}
 documentclass: article
 ---
 
@@ -48,11 +50,12 @@ opts_chunk$set( fig.align='center');
 
 This R Markdown code explores the issues with a misspecified ANOVA model
 for investigating the homogeneity of the distribution of colors within
-packages of M&M candies.
+packages of m&m's\textregistered
+candies\footnote{``m&m's'' is a trademark of Mars Chocolate North America, LLC}.
 
 ```{r}
 colors=factor(c('red', 'yellow', 'orange', 'green', 'brown', 'blue'))
-n.candies=20            # Number of M&Ms per box
+n.candies=20            # Number of m&m's per box
 n.boxes=990             # Number of boxes sampled in each experiment, 
                         # should be a multiple of the number of colors
 n.replications=50000    # Number of experiments
@@ -61,18 +64,18 @@ library(foreach)
 set.seed(1337)          # For replicability; remove this line for a random seed
 ```
 
-The data-generating model is that boxes of M&Ms are assumed to be filled
+The data-generating model is that boxes of m&m's are assumed to be filled
 with a _fixed_ number of candies, drawn at random from an infinite vat
 containing unknown proportions of each color.
 The research question is whether the colors in this vat are in
 _equal proportions_, or whether those _proportions differ_.
 
 To answer this question, a researcher proposes to draw a sample of
-boxes of M&Ms, and count the numbers of each color in each box.
+boxes of m&m's, and count the numbers of each color in each box.
 ANOVA would then be conducted to see if the counts
 differ between the colors, using the color for group membership
 and the count as the outcome variable. Thus, if there are
-$c$ different colors of M&M, and $N$ boxes were sampled,
+$c$ different colors of m&m's, and $N$ boxes were sampled,
 $c \times N$ data points would be entered into ANOVA,
 $c$ for each box.
 This model is misspecified because the count of colors
@@ -150,7 +153,7 @@ no obvious bias is visible.
 In this second simulation, we simulate experiments under the
 null hypothesis:
 _many_ experiments are simulated in which we sample
-a large number of boxes of M&Ms,
+a large number of boxes of m&m's,
 drawn from a vat with equal proportions of the colors (defined above),
 and run the misspecified ANOVA described above. We then investigate
 the distribution of p-values from these experiments, to see how this
@@ -194,7 +197,7 @@ In this third simulation, we attempt to use ANOVA correctly
 in the above situation.
 Again we simulate the same null hypothesis:
 _many_ experiments are simulated in which we sample
-a large number of boxes of M&Ms,
+a large number of boxes of m&m's,
 drawn from a vat with equal proportions of the colors (defined above).
 This time, we divide the sample into different portions,
 of size $\frac{n.boxes}{n.colors}$, and count the colors in separate
@@ -246,7 +249,7 @@ opts_chunk$set(fig.height = 2.5/2);
 
 In this fourth simulation, alter the data-generating model
 so that the vat contains unequal proportions of the different
-colors of M&Ms.
+colors of m&m's.
 We investigate the power of the corrected ANOVA to detect
 a situation where the null hypothesis is, in fact, false.
 
