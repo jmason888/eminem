@@ -10,6 +10,7 @@ output:
     toc: no
     toc_depth: 3
     dev: tikz
+    fig_caption: yes
   html_document:
     toc: no
   word_document: default
@@ -29,12 +30,32 @@ header-includes:
 documentclass: article
 ---
 
+```{r setup, include=FALSE}
+options(digits = 3)
+library(R.utils)
+library(xtable)
+library(tikzDevice)
+library(knitr)
+options(xtable.comment = FALSE)
+options(xtable.booktabs = TRUE)
+options(xtable.caption.placement = "top")
+opts_chunk$set(fig.width = 4);
+opts_chunk$set(fig.height = 3); 
+opts_chunk$set(fig.pos='h');
+opts_chunk$set( fig.align='center');
+```
+
+
 This R Markdown code explores the issues with a misspecified ANOVA model
 for investigating the homogeneity of the distribution of colors within
 packages of M&M candies.
 
 ```{r}
+library(foreach)
 colors=factor(c('red', 'green', 'blue', 'yellow'))
+n.candies=20            # Number of M&Ms per box
+n.boxes=1000            # Number of experiments
+n.replications=10000    # Number of boxes sampled in each experiment
 ```
 
 The data-generating model is that boxes of M&Ms are assumed to be filled
@@ -81,7 +102,37 @@ $$
 \end{aligned}
 $$
 
-In this first simulation, we simulate experiments under the
+\newpage
+
+In this first simulation, we simulate a _correctly_ specified
+ANOVA model where, for each color, we draw an independent
+sample from the standard normal distribution $N(0,1)$.
+
+```{r simulation1, fig.cap="Empiricial Distribution of p-values under simple ANOVA"  }
+p.values = times (n.replications) %do% {
+  # For each color, draw N standard normal deviates
+  counts=data.frame(foreach(color=colors, .combine=rbind) %do%
+                      data.frame(color=color,
+                                 count=rnorm(n.boxes)))
+  
+  # To run ANOVA in R, we first fit ANOVA as a linear model using lm(),
+  # then use the anova() function to compute the required F-tests.
+  model=lm(count~color, data=counts)
+  results=anova(model)
+  
+  # Next, we extract and return the p-value; these are collected by times() into a vector
+  p.value=results['color','Pr(>F)']
+  p.value
+}
+
+hist(p.values,
+     breaks=min(20, n.replications/10),
+     main=NA, freq=FALSE)
+```
+
+\newpage
+
+In this second simulation, we simulate experiments under the
 null hypothesis:
 _many_ experiments are simulated in which we sample
 a large number of boxes of M&Ms,
@@ -90,20 +141,26 @@ and run the misspecified ANOVA described above. We then investigate
 the distribution of p-values from these experiments, to see how this
 distribution deviates from the expected $Uniform(0,1)$ distribution.
 
-```{r simulation1, fig.width=4  }
-library(foreach)
-n.boxes=1000
-n.replications=100
-
+```{r simulation2, fig.cap="Empiricial Distribution of p-values under misspecified ANOVA"  }
 p.values = times (n.replications) %do% {
-  sample=t(replicate(n.boxes, sample(colors, 20, replace=TRUE)))
-  counts=data.frame(foreach(color=colors, .combine=rbind) %do% data.frame(color=color, count=apply(sample, 1, function(row) sum(row == color))))
-  lm=lm(count~color, data=counts)
-  a=anova(lm)
-  p.value=a['color','Pr(>F)']
+  # Draw a sample from a vat with equal proportions of each color
+  sample=t(replicate(n.boxes, sample(colors, n.candies, replace=TRUE)))
+  
+  # Form a dataset where we count each color in each box and combine these
+  # counts into a single dataset.
+  counts=data.frame(foreach(color=colors, .combine=rbind) %do%
+                      data.frame(color=color,
+                                 count=apply(sample, 1, function(row) sum(row == color))))
+  
+  # As above, we fit the model, and return the p-value.
+  model=lm(count~color, data=counts)
+  results=anova(model)
+  p.value=results['color','Pr(>F)']
   p.value
 }
 
-hist(p.values, breaks=min(100, n.replications/10), freq=FALSE)
+hist(p.values,
+     breaks=min(20, n.replications/10),
+     main=NA, freq=FALSE)
 ```
 
