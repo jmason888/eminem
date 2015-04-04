@@ -40,7 +40,7 @@ options(xtable.comment = FALSE)
 options(xtable.booktabs = TRUE)
 options(xtable.caption.placement = "top")
 opts_chunk$set(fig.width = 4);
-opts_chunk$set(fig.height = 3); 
+opts_chunk$set(fig.height = 2.5); 
 opts_chunk$set(fig.pos='h');
 opts_chunk$set( fig.align='center');
 ```
@@ -127,6 +127,9 @@ p.values = times (n.replications) %do% {
   p.value
 }
 
+# Set smaller borders for our plots
+par(mar=c(4, 4, 0.5, 2)) # (bottom, left, top, right)
+
 # Histogram of the p-values
 hist(p.values,
      breaks=min(20, n.replications/10),
@@ -134,7 +137,13 @@ hist(p.values,
 
 # Overlay a kernel density plot
 lines(density(p.values))
+
+# Overlay the density=1.0 criterion line
+abline(h=1.0, lty=4)
 ```
+
+With a large number of replications,
+no obvious bias is visible.
 
 \newpage
 
@@ -164,12 +173,20 @@ p.values = times (n.replications) %do% {
   p.value
 }
 
-# Histogram of the p-values, and density plot
+# Histogram of the p-values, density plot, and criterion line
+par(mar=c(4, 4, 0.5, 2)) # (bottom, left, top, right)
 hist(p.values,
      breaks=min(20, n.replications/10),
      main=NA, freq=FALSE)
 lines(density(p.values))
+abline(h=1.0, lty=4)
 ```
+
+Even with a large number of replications,
+bias is clearly visible: there is too much
+density near 0.
+This indicates that they null
+hypothesis would be rejected too often.
 
 \newpage
 
@@ -191,9 +208,6 @@ p.values = times (n.replications) %do% {
   sample=t(replicate(n.boxes, sample(colors, n.candies, replace=TRUE)))
   
   # Split the sample into equal parts for each color.
-  # (We have to turn the sample into a data frame, so that split keeps
-  # boxes intact, otherwise it turns the matrix into a flat vector and
-  # splits that...)
   split = split(data.frame(sample), colors)
   
   # We count each color in it's separate portion, and recombine the
@@ -209,10 +223,14 @@ p.values = times (n.replications) %do% {
   p.value
 }
 
-# Histogram of the p-values, and density plot
+# Histogram of the p-values, density plot, and criterion line
+par(mar=c(4, 4, 0.5, 2)) # (bottom, left, top, right)
 hist(p.values,
      breaks=min(20, n.replications/10),
      main=NA, freq=FALSE)
 lines(density(p.values))
+abline(h=1.0, lty=4)
 ```
 
+With a large number of replications,
+no obvious bias is visible.
