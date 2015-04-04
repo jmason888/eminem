@@ -141,7 +141,7 @@ hist(p.values, xlim=c(0, 1),
      main=NA, freq=FALSE)
 
 # Overlay a kernel density plot
-lines(density(p.values))
+lines(density(p.values, from=0, to=1))
 
 # Overlay the density=1.0 criterion line
 abline(h=1.0, lty=4)
@@ -183,7 +183,7 @@ par(mar=c(4, 4, 0.5, 2)) # (bottom, left, top, right)
 hist(p.values, xlim=c(0, 1),
      breaks=min(20, n.replications/10),
      main=NA, freq=FALSE)
-lines(density(p.values))
+lines(density(p.values, from=0, to=1))
 abline(h=1.0, lty=4)
 ```
 
@@ -233,7 +233,7 @@ par(mar=c(4, 4, 0.5, 2)) # (bottom, left, top, right)
 hist(p.values, xlim=c(0, 1),
      breaks=min(20, n.replications/10),
      main=NA, freq=FALSE)
-lines(density(p.values))
+lines(density(p.values, from=0, to=1))
 abline(h=1.0, lty=4)
 ```
 
@@ -291,7 +291,7 @@ for (n.boxes in sample.sizes) {
   hist(p.values, xlim=c(0, 1),
        breaks=min(20, n.replications/10),
        xlab=NA, ylab=NA, main=NA, freq=FALSE)
-  lines(density(p.values))
+  lines(density(p.values, from=0, to=1))
   abline(h=1.0, lty=4)
   }
 ```
