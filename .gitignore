@@ -3,3 +3,5 @@
 .RData
 *.html
 *.pdf
+*_files
+*-tikzDictionary

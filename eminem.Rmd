@@ -2,7 +2,31 @@
 title: "M&Ms simulation"
 author: "James Mason"
 date: "Friday, April 03, 2015"
-output: pdf_document
+output:
+  pdf_document:
+    fig_crop: no
+    keep_tex: no
+    number_sections: no
+    toc: no
+    toc_depth: 3
+    dev: tikz
+  html_document:
+    toc: no
+  word_document: default
+header-includes:
+   - \usepackage{booktabs}
+   - \usepackage{caption}
+   - \usepackage{fancyhdr}
+   - \pagestyle{fancy}
+   - \fancyhf{}
+   - \fancyhead[L]{\sc\thetitle}
+   - \fancyhead[R]{\sc\theauthor}
+   - \fancyfoot[C]{\thepage}
+   - \usepackage{pgf,tikz}
+   - \usetikzlibrary{positioning}
+   - \usepackage[absolute]{textpos}
+   - \usepackage{sidecap}
+documentclass: article
 ---
 
 This R Markdown code explores the issues with a misspecified ANOVA model
@@ -27,7 +51,7 @@ and the count as the outcome variable. Thus, if there are
 $c$ different colors of M&M, and $N$ boxes were sampled,
 $c \times N$ data points would be entered into ANOVA,
 $c$ for each box.
-This model is missepcified because the count of colors
+This model is misspecified because the count of colors
 are _not independent_ within each box: for example if the
 box is mostly full of blue candies, there will be less
 room for each of the other colors.
@@ -39,12 +63,12 @@ the ANOVA model, hypothesis test is as follows:
 * $H_A$: At least one color in the vat has a different
 proportion than the others.
 
-In a correctly-sepecified model,  if the null hypothesis is true,
+In a correctly-specified model,  if the null hypothesis is true,
 with a significance threshold of $\alpha$,
 we would expect to obtain $p < \alpha$
 (and thus falsely reject the null hypothesis)
 in exactly $\alpha$ proportion of experiments. 
-(For example if our siginificance threshold is $p<0.05$,
+(For example if our significance threshold is $p<0.05$,
 then we would expect to falsely reject the null 20% of
 the time).  This is, in fact, the _definition_ of the
 p-value, and thus
@@ -57,12 +81,19 @@ $$
 \end{aligned}
 $$
 
-```{r}
+In this first simulation, we simulate experiments under the
+null hypothesis:
+_many_ experiments are simulated in which we sample
+a large number of boxes of M&Ms,
+drawn from a vat with equal proportions of the colors (defined above),
+and run the misspecified ANOVA described above. We then investigate
+the distribution of p-values from these experiments, to see how this
+distribution deviates from the expected $Uniform(0,1)$ distribution.
+
+```{r simulation1, fig.width=4  }
 library(foreach)
 n.boxes=1000
-n.replications=10
-
-colors=factor(c('red', 'green', 'blue', 'yellow'))
+n.replications=100
 
 p.values = times (n.replications) %do% {
   sample=t(replicate(n.boxes, sample(colors, 20, replace=TRUE)))
@@ -73,6 +104,6 @@ p.values = times (n.replications) %do% {
   p.value
 }
 
-hist(p.values)
+hist(p.values, breaks=min(100, n.replications/10), freq=FALSE)
 ```
 
