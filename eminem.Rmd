@@ -181,10 +181,17 @@ p.values = times (n.replications) %do% {
   # Draw a sample from a vat with equal proportions of each color
   sample=t(replicate(n.boxes, sample(colors, n.candies, replace=TRUE)))
   
-  # We count each color in each box and combine these counts into a single dataset.
-  counts=data.frame(foreach(color=colors, .combine=rbind) %do%
+  # Split the sample into equal parts for each color.
+  # (We have to turn the sample into a data frame, so that split keeps
+  # boxes intact, otherwise it turns the matrix into a flat vector and
+  # splits that...)
+  split = split(data.frame(sample), colors)
+  
+  # We count each color in it's separate portion, and recombine the
+  # results into a single dataset.
+  counts=data.frame(foreach(color=colors, .combine=rbind) %do% 
                       data.frame(color=color,
-                                 count=apply(sample, 1, function(row) sum(row == color))))
+                                 count=apply(split[[color]], 1, function(row) sum(row == color))))
   
   # As above, we fit the model, and return the p-value.
   model=lm(count~color, data=counts)
@@ -196,3 +203,5 @@ p.values = times (n.replications) %do% {
 hist(p.values,
      breaks=min(20, n.replications/10),
      main=NA, freq=FALSE)
+```
+
