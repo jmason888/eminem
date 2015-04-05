@@ -50,6 +50,18 @@ opts_chunk$set(fig.height = 2.5);
 opts_chunk$set(fig.pos='h');
 opts_chunk$set( fig.align='center');
 registerDoParallel()
+writeStats <- function() {
+  write.csv(x=data.frame(datetime=start.time,
+                         host=Sys.info()["nodename"],
+                         replications=n.replications,
+                         boxes=n.boxes,
+                         candies=n.candies,
+                         elapsed=as.numeric(Sys.time() - start.time),
+                         cores),
+            row.names=FALSE,
+            append=TRUE,
+            file="eminem_stats.csv")
+}
 ```
 
 
@@ -302,3 +314,8 @@ for (n.boxes in sample.sizes) {
 At reasonable sample sizes (about 40 _per color_), this test appears to
 reliably detect that the proportion of one color is different.
 \footnotetext[2]{Computation took `r  Sys.time() - start.time` minutes using `r getDoParWorkers()` cores.}
+
+```{r include=FALSE}
+writeStats()
+```
+
