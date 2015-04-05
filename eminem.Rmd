@@ -170,7 +170,6 @@ p.values = times (n.replications) %do% {
   counts=data.frame(foreach(color=colors, .combine=rbind) %do%
                       data.frame(color=color,
                                  count=apply(sample, 1, function(row) sum(row == color))))
-  
   # As above, we fit the model, and return the p-value.
   model=lm(count~color, data=counts)
   results=anova(model)
@@ -280,7 +279,6 @@ for (n.boxes in sample.sizes) {
                         data.frame(color=color,
                                    count=apply(split[[color]], 1,
                                                function(row) sum(row == color))))
-    
     # As above, we fit the model, and return the p-value.
     model=lm(count~color, data=counts)
     results=anova(model)
