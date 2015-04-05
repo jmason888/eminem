@@ -58,6 +58,7 @@ writeStats <- function() {
                          elapsed=difftime(start.time, Sys.time(), units="mins"),
                          cores=getDoParWorkers()),
             col.names=FALSE,
+            row.names=FALSE,
             append=TRUE,
             file="eminem_stats.csv")
   paste("Computation took", signif(elapsed, 3), "minutes using", cores, "cores.")
