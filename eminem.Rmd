@@ -51,14 +51,15 @@ opts_chunk$set(fig.pos='h');
 opts_chunk$set( fig.align='center');
 registerDoParallel()
 writeStats <- function() {
-  elapsed=difftime(Sys.time(), start.time, units="mins")
+  elapsed=abs(difftime(Sys.time(), start.time, units="mins"))
   cores=getDoParWorkers()
-  write.csv(x=data.frame(datetime=start.time,
+  write.table(x=data.frame(datetime=start.time,
                          replications=n.replications,
-                         elapsed=difftime(start.time, Sys.time(), units="mins"),
-                         cores=getDoParWorkers()),
+                         elapsed=elapsed,
+                         cores=cores),
             col.names=FALSE,
             row.names=FALSE,
+            sep=",", dec=".", qmethod = "double",
             append=TRUE,
             file="eminem_stats.csv")
   paste("Computation took", signif(elapsed, 3), "minutes using", cores, "cores.")
