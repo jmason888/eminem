@@ -35,11 +35,13 @@ documentclass: article
 ---
 
 ```{r setup, include=FALSE}
+start.time<-Sys.time()
 options(digits = 3)
 library(R.utils)
 library(xtable)
 library(tikzDevice)
 library(knitr)
+library(doParallel)
 options(xtable.comment = FALSE)
 options(xtable.booktabs = TRUE)
 options(xtable.caption.placement = "top")
@@ -47,6 +49,7 @@ opts_chunk$set(fig.width = 4);
 opts_chunk$set(fig.height = 2.5); 
 opts_chunk$set(fig.pos='h');
 opts_chunk$set( fig.align='center');
+registerDoParallel()
 ```
 
 
@@ -117,7 +120,7 @@ ANOVA model where, for each color, we draw an independent
 sample from the standard normal distribution $N(0,1)$.
 
 ```{r simulation1, fig.cap="Empiricial Distribution of p-values under simple ANOVA"  }
-p.values = times (n.replications) %do% {
+p.values = times (n.replications) %dopar% {
   # For each color, draw N standard normal deviates
   counts=data.frame(color=rep(colors, each=n.boxes),
                     count=rnorm(n.boxes*length(colors)))
@@ -162,7 +165,7 @@ the distribution of p-values from these experiments, to see how this
 distribution deviates from the expected $Uniform(0,1)$ distribution.
 
 ```{r simulation2, fig.cap="Empiricial Distribution of p-values under misspecified ANOVA"  }
-p.values = times (n.replications) %do% {
+p.values = times (n.replications) %dopar% {
   # Draw a sample from a vat with equal proportions of each color
   sample=t(replicate(n.boxes, sample(colors, n.candies, replace=TRUE)))
   
@@ -206,7 +209,7 @@ it will mean that the counts of each color are independent of
 each other.
 
 ```{r simulation3, fig.cap="Empiricial Distribution of p-values under corrected ANOVA"  }
-p.values = times (n.replications) %do% {
+p.values = times (n.replications) %dopar% {
   # Draw a sample from a vat with equal proportions of each color
   sample=t(replicate(n.boxes, sample(colors, n.candies, replace=TRUE)))
   
@@ -261,7 +264,7 @@ sample size; instead of `r n.boxes` boxes, we try smaller samples:
 ```{r simulation4, fig.cap="Empiricial Distributions of p-values under unequal proportions", fig.subcap=sample.captions }
 
 for (n.boxes in sample.sizes) {
-  p.values = times (n.replications) %do% {
+  p.values = times (n.replications) %dopar% {
     # Unequal proportions in the vat:
     weights=rep(1, length(colors))
     names(weights)=colors
@@ -294,3 +297,4 @@ for (n.boxes in sample.sizes) {
 
 At reasonable sample sizes (about 40 _per color_), this test appears to
 reliably detect that the proportion of one color is different.
+\footnote{Computation took `r  Sys.time() - start.time` minutes using `r getDoParWorkers()` cores.`}
