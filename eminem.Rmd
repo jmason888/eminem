@@ -51,7 +51,7 @@ opts_chunk$set(fig.pos='h');
 opts_chunk$set( fig.align='center');
 registerDoParallel()
 writeStats <- function() {
-  elapsed=difftime(start.time, Sys.time(), units="mins")
+  elapsed=difftime(Sys.time(), start.time, units="mins")
   cores=getDoParWorkers()
   write.csv(x=data.frame(datetime=start.time,
                          replications=n.replications,
