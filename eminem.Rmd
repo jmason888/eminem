@@ -49,7 +49,7 @@ opts_chunk$set(fig.width = 4);
 opts_chunk$set(fig.height = 2.5); 
 opts_chunk$set(fig.pos='h');
 opts_chunk$set( fig.align='center');
-registerDoParallel()
+registerDoParallel(myCores)
 writeStats <- function() {
   elapsed=abs(difftime(Sys.time(), start.time, units="mins"))
   cores=getDoParWorkers()
@@ -77,10 +77,10 @@ colors=factor(c('red', 'yellow', 'orange', 'green', 'brown', 'blue'))
 n.candies=20            # Number of m&m's per box
 n.boxes=990             # Number of boxes sampled in each experiment, 
                         # should be a multiple of the number of colors
-n.replications=50000    # Number of experiments
+n.replications=5000.0    # Number of experiments
 
 library(foreach)
-set.seed(1337)          # For replicability; remove this line for a random seed
+#set.seed(1337)          # For replicability; remove this line for a random seed
 ```
 
 The data-generating model is that boxes of \mms{} are assumed to be filled
